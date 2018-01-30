@@ -30,6 +30,42 @@ Check out the postgres base image documentation, https://hub.docker.com/_/postgr
 * Mount a volume at PGDATA if you prefer caching to disk.
 * Mounting an empty folder on your host to /var/lib/postgresql/data prevents creation of an unnecessary volume.
 
+## Capabilities
+### Must add
+* SYS_ADMIN
+
+### Can drop
+* AUDIT_CONTROL
+* AUDIT_WRITE
+* BLOCK_SUSPEND
+* DAC_READ_SEARCH
+* IPC_LOCK
+* IPC_OWNER
+* KILL
+* LEASE
+* LINUX_IMMUTABLE
+* MAC_ADMIN
+* MAC_OVERRIDE
+* MKNOD
+* NET_ADMIN
+* NET_BIND_SERVICE
+* NET_BROADCAST
+* NET_RAW
+* SETFCAP
+* SETPCAP
+* SYSLOG
+* SYS_BOOT
+* SYS_CHROOT
+* SYS_MODULE
+* SYS_NICE
+* SYS_PACCT
+* SYS_PTRACE
+* SYS_RAWIO
+* SYS_RESOURCE
+* SYS_TIME
+* SYS_TTY_CONFIG
+* WAKE_ALARM
+
 ## Tips
 Example of ADDITIONAL_CONFIGURATION:
 ```
