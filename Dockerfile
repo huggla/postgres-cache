@@ -1,4 +1,4 @@
-FROM mdillon/postgis:10-alpine
+FROM postgres:10-alpine
 
 COPY ./docker-entrypoint-initdb.d/x01.cache.sh /docker-entrypoint-initdb.d/x01.cache.sh
 
