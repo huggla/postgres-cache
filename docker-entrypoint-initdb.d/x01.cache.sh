@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [ ! -z ${USER_PASSWORD_FILE+x} ]
+if [ -n $USER_PASSWORD_FILE ]
 then
    read USER_PASSWORD < "$USER_PASSWORD_FILE"
 fi
@@ -11,7 +11,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
    CREATE DATABASE "$DATABASE" WITH OWNER = "$POSTGRES_USER" TEMPLATE=template_postgis;
 EOSQL
 
-if [ ! -z ${FOREIGN_SERVER_USER_PASSWORD_FILE+x} ]
+if [ -n $FOREIGN_SERVER_USER_PASSWORD_FILE ]
 then
    read FOREIGN_SERVER_USER_PASSWORD < "$FOREIGN_SERVER_USER_PASSWORD_FILE"
 fi
@@ -28,7 +28,7 @@ IFS=, read -ra fschemas_array <<< "$FOREIGN_SERVER_SCHEMAS"
 for fschema in "${fschemas_array[@]}"
 do
    eval 'foreign_server_schema_tables=$'"$fschema"
-   if [ -n "$foreign_server_schema_tables" ]
+   if [ -n $foreign_server_schema_tables ]
    then 
       limitstr="LIMIT TO ($foreign_server_schema_tables)"
    else
@@ -44,7 +44,7 @@ do
       GRANT USAGE ON SCHEMA "$fschema" TO "$USER";
       ALTER DEFAULT PRIVILEGES IN SCHEMA "$fschema" GRANT SELECT ON TABLES TO "$USER";
 ___EOSQL
-   if [ -z "$foreign_server_schema_tables" ]
+   if [ -z $foreign_server_schema_tables ]
    then
       foreign_server_schema_tables=`psql -q -A -t -R , -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" "$DATABASE" -c "SELECT table_name FROM information_schema.tables WHERE table_schema='$ftable_schema'"`
    fi   
