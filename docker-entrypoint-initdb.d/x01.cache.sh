@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+IFS=","
 
 if [ -n "$USER_PASSWORD_FILE" ]
 then
@@ -24,8 +25,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" "$DATABASE" <<-EOSQL
     CREATE USER MAPPING FOR "$POSTGRES_USER" SERVER "$FOREIGN_SERVER_NAME" OPTIONS (user '$FOREIGN_SERVER_USER', password '$FOREIGN_SERVER_USER_PASSWORD');
 EOSQL
 
-IFS=, read -ra fschemas_array <<< "$FOREIGN_SERVER_SCHEMAS"
-for fschema in "${fschemas_array[@]}"
+for fschema in $FOREIGN_SERVER_SCHEMAS
 do
    eval 'foreign_server_schema_tables=$'"$fschema"
    if [ -n "$foreign_server_schema_tables" ]
@@ -48,8 +48,7 @@ ___EOSQL
    then
       foreign_server_schema_tables=`psql -q -A -t -R , -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" "$DATABASE" -c "SELECT table_name FROM information_schema.tables WHERE table_schema='$ftable_schema'"`
    fi   
-   IFS=, read -ra ftables_array <<< "$foreign_server_schema_tables"
-   for ftable in "${ftables_array[@]}"
+   for ftable in $foreign_server_schema_tables
    do
       psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" "$DATABASE" -c "CREATE MATERIALIZED VIEW $fschema.$ftable AS SELECT * FROM $ftable_schema.$ftable WITH DATA;"
    done
