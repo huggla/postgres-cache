@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 IFS=","
+PATH=/usr/local/bin
 
 if [ -n "$USER_PASSWORD_FILE" ]
 then
