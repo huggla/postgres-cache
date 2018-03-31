@@ -4,8 +4,8 @@ USER root
 
 COPY ./initdb/x01.cache.sh /etc/initdb/x01.cache.sh
 
-RUN chown postgres:root /etc/initdb/x01.cache.sh \
- && chmod ug+x /etc/initdb/x01.cache.sh
+RUN /bin/chown postgres:root /etc/initdb/x01.cache.sh \
+ && /bin/chmod ug+x /etc/initdb/x01.cache.sh
 
 USER sudoer
 
