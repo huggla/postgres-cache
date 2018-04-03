@@ -2,17 +2,20 @@
 set -e
 IFS=","
 PATH=/usr/local/bin
-
+readonly USER="$(var - USER)"
+readonly USER_PASSWORD_FILE="$(var - USER_PASSWORD_FILE)"
 if [ -n "$USER_PASSWORD_FILE" ]
 then
    read USER_PASSWORD < "$USER_PASSWORD_FILE"
+else
+   USER_PASSWORD="$(var - USER_PASSWORD)"
 fi
-
+readonly USER_PASSWORD
 psql -v ON_ERROR_STOP=1 --username "postgres" <<-EOSQL
    CREATE USER "$USER" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';
-   CREATE DATABASE "$DATABASE" WITH OWNER = "postgres" TEMPLATE=template_postgis;
+   CREATE DATABASE "$DATABASE" WITH OWNER = "postgres";# TEMPLATE=template_postgis;
 EOSQL
-
+exit
 if [ -n "$FOREIGN_SERVER_USER_PASSWORD_FILE" ]
 then
    read FOREIGN_SERVER_USER_PASSWORD < "$FOREIGN_SERVER_USER_PASSWORD_FILE"
