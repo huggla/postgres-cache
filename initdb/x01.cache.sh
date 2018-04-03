@@ -12,11 +12,12 @@ else
 fi
 readonly USER_PASSWORD
 readonly DATABASE="$(var - DATABASE)"
-psql -v ON_ERROR_STOP=1 --username "postgres" <<-EOSQL
+psql -v ON_ERROR_STOP=1 --username "postgres" <<EOSQL
    CREATE USER "$USER" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';
-   CREATE DATABASE "$DATABASE" WITH OWNER = "postgres";# TEMPLATE=template_postgis;
+   CREATE DATABASE "$DATABASE" WITH OWNER = "postgres";
 EOSQL
 exit
+# TEMPLATE=template_postgis;
 readonly FOREIGN_SERVER_USER_PASSWORD_FILE="$(var - FOREIGN_SERVER_USER_PASSWORD_FILE)"
 if [ -n "$FOREIGN_SERVER_USER_PASSWORD_FILE" ]
 then
