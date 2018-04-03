@@ -11,6 +11,7 @@ else
    USER_PASSWORD="$(var - USER_PASSWORD)"
 fi
 readonly USER_PASSWORD
+readonly DATABASE="$(var - DATABASE)"
 psql -v ON_ERROR_STOP=1 --username "postgres" <<-EOSQL
    CREATE USER "$USER" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';
    CREATE DATABASE "$DATABASE" WITH OWNER = "postgres";# TEMPLATE=template_postgis;
