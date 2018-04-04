@@ -6,8 +6,6 @@ IFS=","
 if [ -n "$USER_PASSWORD_FILE" ]
 then
    read USER_PASSWORD < "$USER_PASSWORD_FILE"
-else
-   USER_PASSWORD="$(var - USER_PASSWORD)"
 fi
 readonly USER_PASSWORD
 readonly DATABASE="$(var - DATABASE)"
