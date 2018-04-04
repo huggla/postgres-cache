@@ -2,6 +2,9 @@
 set -e
 IFS=","
 #PATH=/usr/local/bin
+echo "hej"
+echo "$DATABASE"
+echo "hej2"
 readonly USER="$(var - USER)"
 readonly USER_PASSWORD_FILE="$(var - USER_PASSWORD_FILE)"
 if [ -n "$USER_PASSWORD_FILE" ]
@@ -14,14 +17,9 @@ readonly USER_PASSWORD
 readonly DATABASE="$(var - DATABASE)"
 #psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql -v ON_ERROR_STOP=1 --username $NAME --dbname $NAME"
 #eval $psql_cmd <<-EOSQL
-called=$_
-echo $called
-echo $_
-echo $0
-echo $BASH_SOURCE
-/usr/bin/lsof +p $$
-echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';"
-echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";"
+sql_file="$(/usr/bin/lsof +p $$ | /bin/grep -oE "([^ ]+ ?[^ ]*)+$").sql"
+echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';" > $sql_file
+echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";" >> $sql_file
 #EOSQL
 exit
 # TEMPLATE=template_postgis;
