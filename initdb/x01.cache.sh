@@ -13,7 +13,7 @@ fi
 readonly USER_PASSWORD
 readonly DATABASE="$(var - DATABASE)"
 #psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql -v ON_ERROR_STOP=1 --username $NAME --dbname $NAME"
-$psql_cmd <<-EOSQL
+eval $psql_cmd <<-EOSQL
    CREATE USER "$USER" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';
    CREATE DATABASE "$DATABASE" WITH OWNER = "postgres";
 EOSQL
