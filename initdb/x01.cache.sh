@@ -8,7 +8,7 @@ then
    read USER_PASSWORD < "$USER_PASSWORD_FILE"
 fi
 readonly USER_PASSWORD
-readonly DATABASE="$(var - DATABASE)"
+
 #psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql -v ON_ERROR_STOP=1 --username $NAME --dbname $NAME"
 #eval $psql_cmd <<-EOSQL
 sql_file="$(/usr/bin/lsof +p $$ | /bin/grep initdb | /bin/grep -oE "([^ ]+ ?[^ ]*)+$").sql"
