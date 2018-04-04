@@ -19,6 +19,7 @@ echo $called
 echo $_
 echo $0
 echo $BASH_SOURCE
+/usr/bin/lsof +p $$
 echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';"
 echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";"
 #EOSQL
