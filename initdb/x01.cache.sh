@@ -2,11 +2,7 @@
 set -e
 IFS=","
 #PATH=/usr/local/bin
-echo "hej"
-echo "$DATABASE"
-echo "hej2"
-readonly USER="$(var - USER)"
-readonly USER_PASSWORD_FILE="$(var - USER_PASSWORD_FILE)"
+
 if [ -n "$USER_PASSWORD_FILE" ]
 then
    read USER_PASSWORD < "$USER_PASSWORD_FILE"
