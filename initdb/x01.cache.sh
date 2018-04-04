@@ -14,8 +14,9 @@ readonly USER_PASSWORD
 readonly DATABASE="$(var - DATABASE)"
 #psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql -v ON_ERROR_STOP=1 --username $NAME --dbname $NAME"
 #eval $psql_cmd <<-EOSQL
-echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';" > $0.sql
-echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";" >> $0.sql
+echo "$0.sql"
+echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';"
+echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";"
 #EOSQL
 exit
 # TEMPLATE=template_postgis;
