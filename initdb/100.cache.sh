@@ -1,7 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 IFS=","
-#PATH=/usr/local/bin
 readonly USER DATABASE USER_PASSWORD_FILE FOREIGN_SERVER_USER FOREIGN_SERVER_USER_PASSWORD_FILE FOREIGN_SERVER_NAME FOREIGN_SERVER_ADDRESS FOREIGN_SERVER_DATABASE FOREIGN_SERVER_PORT
 if [ -n "$USER_PASSWORD_FILE" ]
 then
@@ -12,9 +11,9 @@ readonly USER_PASSWORD
 #psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql -v ON_ERROR_STOP=1 --username $NAME --dbname $NAME"
 #eval $psql_cmd <<-EOSQL
 
-sql_file="$(/usr/bin/lsof +p $$ | /bin/grep "initdb" | /usr/bin/awk -F "\t" '{print $3}').sql"
+#sql_file="$(/usr/bin/lsof +p $$ | /bin/grep "initdb" | /usr/bin/awk -F "\t" '{print $3}').sql"
 
-echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';" > "$sql_file"
+echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';" >> "$sql_file"
 echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";" >> "$sql_file"
 # TEMPLATE=template_postgis;
 
