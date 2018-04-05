@@ -38,15 +38,15 @@ do
       limitstr=""
    fi
    ftable_schema=$fschema"_foreign"
-   psql -v ON_ERROR_STOP=1 --username "postgres" "$DATABASE" <<-___EOSQL
-      CREATE SCHEMA $ftable_schema AUTHORIZATION "postgres";
-      GRANT USAGE ON SCHEMA $ftable_schema TO "$USER";
-      ALTER DEFAULT PRIVILEGES IN SCHEMA $ftable_schema GRANT SELECT ON TABLES TO "$USER";
-      IMPORT FOREIGN SCHEMA "$fschema" $limitstr FROM SERVER "$FOREIGN_SERVER_NAME" INTO $ftable_schema;
-      CREATE SCHEMA "$fschema" AUTHORIZATION "postgres";
-      GRANT USAGE ON SCHEMA "$fschema" TO "$USER";
-      ALTER DEFAULT PRIVILEGES IN SCHEMA "$fschema" GRANT SELECT ON TABLES TO "$USER";
-___EOSQL
+   echo "\\connect $DATABASE" >> "$sql_file"
+   echo "CREATE SCHEMA $ftable_schema AUTHORIZATION \"postgres\";" >> "$sql_file"
+   echo "GRANT USAGE ON SCHEMA $ftable_schema TO \"$USER\";" >> "$sql_file"
+   echo "ALTER DEFAULT PRIVILEGES IN SCHEMA $ftable_schema GRANT SELECT ON TABLES TO \"$USER\";" >> "$sql_file"
+   echo "IMPORT FOREIGN SCHEMA \"$fschema\" $limitstr FROM SERVER \"$FOREIGN_SERVER_NAME\" INTO $ftable_schema;" >> "$sql_file"
+   echo "CREATE SCHEMA \"$fschema\" AUTHORIZATION \"postgres\";" >> "$sql_file"
+   echo "GRANT USAGE ON SCHEMA \"$fschema\" TO \"$USER\";" >> "$sql_file"
+   echo "ALTER DEFAULT PRIVILEGES IN SCHEMA \"$fschema\" GRANT SELECT ON TABLES TO \"$USER\";" >> "$sql_file"
+exit
    if [ -z "$foreign_server_schema_tables" ]
    then
       foreign_server_schema_tables=`psql -q -A -t -R , -v ON_ERROR_STOP=1 --username "postgres" "$DATABASE" -c "SELECT table_name FROM information_schema.tables WHERE table_schema='$ftable_schema'"`
