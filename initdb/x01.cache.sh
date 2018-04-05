@@ -11,7 +11,7 @@ readonly USER_PASSWORD
 
 #psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql -v ON_ERROR_STOP=1 --username $NAME --dbname $NAME"
 #eval $psql_cmd <<-EOSQL
-echo "$(/usr/bin/lsof +p $$ | /bin/grep initdb)"
+
 sql_file="$(/usr/bin/lsof +p $$ | /bin/grep initdb | /usr/bin/awk -F '    ' '{print $3}').sql"
 echo "$sql_file"
 echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';" > "$sql_file"
