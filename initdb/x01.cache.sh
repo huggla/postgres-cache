@@ -13,8 +13,9 @@ readonly USER_PASSWORD
 #eval $psql_cmd <<-EOSQL
 echo "$(/usr/bin/lsof +p $$ | /bin/grep initdb)"
 sql_file="$(/usr/bin/lsof +p $$ | /bin/grep initdb | /usr/bin/awk -F '    ' '{print $3}').sql"
-echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';" > $sql_file
-echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";" >> $sql_file
+echo "$sql_file"
+echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';" > "$sql_file"
+echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";" >> "$sql_file"
 #EOSQL
 exit
 # TEMPLATE=template_postgis;
