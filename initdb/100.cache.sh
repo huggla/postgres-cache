@@ -9,7 +9,7 @@
 # readonly CONFIG_FILE="$(var - CONFIG_FILE)"
 # readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
 # readonly sql_dir="$CONFIG_DIR/initdb/sql"
-# readonly psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql --variable=ON_ERROR_STOP=1 --username $NAME"
+# readonly psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql --variable=ON_ERROR_STOP=1 --username postgres"
 # ---------------------------------------------------------
 
 IFS_tmp=$IFS
@@ -76,4 +76,5 @@ do
       "$psql_cmd" --dbname="$DATABASE" -c "CREATE MATERIALIZED VIEW $fschema.$ftable AS SELECT * FROM $ftable_schema.$ftable WITH DATA;"
    done
 done
+IFS=$IFS_tmp
 eval $ADDITIONAL_CONFIGURATION
