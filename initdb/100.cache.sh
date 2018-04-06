@@ -10,45 +10,48 @@
 # readonly sql_dir="$CONFIG_DIR/initdb/sql"
 # ---------------------------------------------------------
 
-vars=USER DATABASE USER_PASSWORD_FILE FOREIGN_SERVER_USER FOREIGN_SERVER_USER_PASSWORD_FILE FOREIGN_SERVER_NAME FOREIGN_SERVER_ADDRESS FOREIGN_SERVER_DATABASE FOREIGN_SERVER_PORT
+vars="USER DATABASE USER_PASSWORD_FILE FOREIGN_SERVER_USER FOREIGN_SERVER_USER_PASSWORD_FILE FOREIGN_SERVER_NAME FOREIGN_SERVER_ADDRESS FOREIGN_SERVER_DATABASE FOREIGN_SERVER_PORT"
 for var in $vars
 do
    eval "var_value=\$$var"
    if [ -z "$var_value" ]
    then
-      eval "$var=\"$(var - $var)\""
-      if [ "$var" != "USER_PASSWORD" ]
-      then
-         eval "readonly $var"
-      fi
+      eval "readonly $var=\"$(var - $var)\""
    fi
 done
-if [ -n "$USER_PASSWORD_FILE" ]
-then
-   read USER_PASSWORD < "$USER_PASSWORD_FILE"
-fi
-readonly USER_PASSWORD
-
-#psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql -v ON_ERROR_STOP=1 --username $NAME --dbname $NAME"
-#eval $psql_cmd <<-EOSQL
-
-#sql_file="$(/usr/bin/lsof +p $$ | /bin/grep "initdb" | /usr/bin/awk -F "\t" '{print $3}').sql"
-
-echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';" >> "$sql_file"
+password_vars="USER_PASSWORD FOREIGN_SERVER_USER_PASSWORD"
+for var in $password_vars
+do
+   eval "var_value=\$$var"
+   if [ -z "$var_value" ]
+   then
+      eval "password_file_value=\$$var_FILE"
+      if [ -n "$password_file_value" ]
+      then
+         eval "read $var < \"$password_file_value\""
+      else
+         eval "$var=\"$(var - $var)\""
+      fi
+      eval "readonly $var"
+   fi
+done
+prio="030"
+dbname="postgres"
+sql_file="$sql_dir/$prio.$dbname.sql"
+echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';" > "$sql_file"
 echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";" >> "$sql_file"
+
 # TEMPLATE=template_postgis;
 
-if [ -n "$FOREIGN_SERVER_USER_PASSWORD_FILE" ]
-then
-   read FOREIGN_SERVER_USER_PASSWORD < "$FOREIGN_SERVER_USER_PASSWORD_FILE"
-fi
-readonly FOREIGN_SERVER_USER_PASSWORD
 echo "CREATE EXTENSION postgres_fdw;" >> "$sql_file"
 echo "CREATE SERVER \"$FOREIGN_SERVER_NAME\" FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host '$FOREIGN_SERVER_ADDRESS', dbname '$FOREIGN_SERVER_DATABASE', port '$FOREIGN_SERVER_PORT');" >> "$sql_file"
 echo "ALTER SERVER \"$FOREIGN_SERVER_NAME\" OPTIONS (ADD updatable 'false');" >> "$sql_file"
 echo "CREATE USER MAPPING FOR \"$USER\" SERVER \"$FOREIGN_SERVER_NAME\" OPTIONS (user '$FOREIGN_SERVER_USER', password '$FOREIGN_SERVER_USER_PASSWORD');" >> "$sql_file"
 echo "CREATE USER MAPPING FOR \"postgres\" SERVER \"$FOREIGN_SERVER_NAME\" OPTIONS (user '$FOREIGN_SERVER_USER', password '$FOREIGN_SERVER_USER_PASSWORD');" >> "$sql_file"
-
+prio="030"
+dbname="$DATABASE"
+sql_file="$sql_dir/$prio.$dbname.sql"
+>"$sql_file"
 for fschema in $FOREIGN_SERVER_SCHEMAS
 do
    eval 'foreign_server_schema_tables=$'"$fschema"
@@ -59,9 +62,6 @@ do
       limitstr=""
    fi
    ftable_schema=$fschema"_foreign"
-   prio=$prio+1 
-   sql_file="$sql_dir/
-   echo "\\connect $DATABASE" >> "$sql_file"
    echo "CREATE SCHEMA $ftable_schema AUTHORIZATION \"postgres\";" >> "$sql_file"
    echo "GRANT USAGE ON SCHEMA $ftable_schema TO \"$USER\";" >> "$sql_file"
    echo "ALTER DEFAULT PRIVILEGES IN SCHEMA $ftable_schema GRANT SELECT ON TABLES TO \"$USER\";" >> "$sql_file"
