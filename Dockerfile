@@ -4,14 +4,10 @@ USER root
 
 COPY ./initdb "$CONFIG_DIR/initdb"
 
-ENV PATH="$BIN_DIR:/bin:/sbin:/usr/bin:/usr/sbin"
-
 RUN /bin/chown -R root:$BEV_NAME "$CONFIG_DIR/initdb" \
  && /bin/chmod -R u=rwX,g=rX,o= "$CONFIG_DIR/initdb"
 
 USER sudoer
-
-ENV PATH="$BIN_DIR"
 
 # pre-set variables (can be set at runtime)
 # -----------------------------------------
