@@ -69,11 +69,11 @@ do
    echo "ALTER DEFAULT PRIVILEGES IN SCHEMA \"$fschema\" GRANT SELECT ON TABLES TO \"$USER\";" >> "$sql_file"
    if [ -z "$foreign_server_schema_tables" ]
    then
-      foreign_server_schema_tables="$(psql -q -A -t -R , -v ON_ERROR_STOP=1 --username "postgres" "$DATABASE" -c "SELECT table_name FROM information_schema.tables WHERE table_schema='$ftable_schema'")"
+      foreign_server_schema_tables="$("$psql_cmd" -q -A -t -R , --dbname="$DATABASE" -c "SELECT table_name FROM information_schema.tables WHERE table_schema='$ftable_schema'")"
    fi   
    for ftable in $foreign_server_schema_tables
    do
-      psql -v ON_ERROR_STOP=1 --username "postgres" "$DATABASE" -c "CREATE MATERIALIZED VIEW $fschema.$ftable AS SELECT * FROM $ftable_schema.$ftable WITH DATA;"
+      "$psql_cmd" --dbname="$DATABASE" -c "CREATE MATERIALIZED VIEW $fschema.$ftable AS SELECT * FROM $ftable_schema.$ftable WITH DATA;"
    done
 done
 eval $ADDITIONAL_CONFIGURATION
