@@ -2,7 +2,7 @@ FROM huggla/postgres-alpine
 
 USER root
 
-COPY ./initdb/* "$CONFIG_DIR/initdb/"
+COPY ./initdb "$CONFIG_DIR/initdb"
 
 ENV PATH="$BIN_DIR:/bin:/sbin:/usr/bin:/usr/sbin"
 
