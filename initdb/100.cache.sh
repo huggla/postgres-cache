@@ -5,9 +5,11 @@
 # set -e +a +m +s +i +f
 # readonly BIN_DIR="$(/usr/bin/dirname "$0")"
 # . "$BIN_DIR/start.stage2.functions"
+# readonly NAME="$(var - NAME)"
 # readonly CONFIG_FILE="$(var - CONFIG_FILE)"
 # readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
 # readonly sql_dir="$CONFIG_DIR/initdb/sql"
+# readonly psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql --variable=ON_ERROR_STOP=1 --username $NAME"
 # ---------------------------------------------------------
 
 IFS_tmp=$IFS
