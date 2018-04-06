@@ -1,7 +1,28 @@
 #!/bin/sh
-set -e
-IFS=","
-readonly USER DATABASE USER_PASSWORD_FILE FOREIGN_SERVER_USER FOREIGN_SERVER_USER_PASSWORD_FILE FOREIGN_SERVER_NAME FOREIGN_SERVER_ADDRESS FOREIGN_SERVER_DATABASE FOREIGN_SERVER_PORT
+
+# Set in parent script:
+# ---------------------------------------------------------
+# set -e +a +m +s +i +f
+# readonly BIN_DIR="$(/usr/bin/dirname "$0")"
+# . "$BIN_DIR/start.stage2.functions"
+# readonly CONFIG_FILE="$(var - CONFIG_FILE)"
+# readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
+# readonly sql_dir="$CONFIG_DIR/initdb/sql"
+# ---------------------------------------------------------
+
+vars=USER DATABASE USER_PASSWORD_FILE FOREIGN_SERVER_USER FOREIGN_SERVER_USER_PASSWORD_FILE FOREIGN_SERVER_NAME FOREIGN_SERVER_ADDRESS FOREIGN_SERVER_DATABASE FOREIGN_SERVER_PORT
+for var in $vars
+do
+   eval "var_value=\$$var"
+   if [ -z "$var_value" ]
+   then
+      eval "$var=\"$(var - $var)\""
+      if [ "$var" != "USER_PASSWORD" ]
+      then
+         eval "readonly $var"
+      fi
+   fi
+done
 if [ -n "$USER_PASSWORD_FILE" ]
 then
    read USER_PASSWORD < "$USER_PASSWORD_FILE"
@@ -38,6 +59,8 @@ do
       limitstr=""
    fi
    ftable_schema=$fschema"_foreign"
+   prio=$prio+1 
+   sql_file="$sql_dir/
    echo "\\connect $DATABASE" >> "$sql_file"
    echo "CREATE SCHEMA $ftable_schema AUTHORIZATION \"postgres\";" >> "$sql_file"
    echo "GRANT USAGE ON SCHEMA $ftable_schema TO \"$USER\";" >> "$sql_file"
