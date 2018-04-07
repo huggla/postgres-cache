@@ -22,7 +22,7 @@ done
 password_vars="USER_PASSWORD FOREIGN_SERVER_USER_PASSWORD"
 for var in $password_vars
 do
-   eval "password_file_value=\$$var_FILE"
+   eval "password_file_value=\$$var""_FILE"
    if [ -n "$password_file_value" ]
    then
       eval "read $var < \"$password_file_value\""
