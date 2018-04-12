@@ -5,6 +5,8 @@
 # set -e +a +m +s +i +f
 # readonly BIN_DIR="$(/usr/bin/dirname "$0")"
 # . "$BIN_DIR/start.stage2.functions"
+# readonly CONFIG_FILE="$(var - CONFIG_FILE)"
+# readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
 # readonly NAME="$(var - NAME)"
 # readonly psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql --variable=ON_ERROR_STOP=1 --username postgres"
 # ---------------------------------------------------------
@@ -18,7 +20,7 @@ do
 done
 prio="40"
 dbname="$DATABASE"
-sql_file="$BIN_DIR/initdb/$prio.$dbname.sql"
+sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
 >"$sql_file"
 IFS=$(echo -en ",")
 for fschema in $FOREIGN_SERVER_SCHEMAS
