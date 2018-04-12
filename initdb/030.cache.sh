@@ -33,6 +33,11 @@ sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
 {
    echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';"
    echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";"
+} > "$sql_file"
+prio="031"
+dbnamn="$DATABASE"
+sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
+{
    echo "CREATE EXTENSION postgres_fdw;"
    echo "CREATE SERVER \"$FOREIGN_SERVER_NAME\" FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host '$FOREIGN_SERVER_ADDRESS', dbname '$FOREIGN_SERVER_DATABASE', port '$FOREIGN_SERVER_PORT');"
    echo "ALTER SERVER \"$FOREIGN_SERVER_NAME\" OPTIONS (ADD updatable 'false');"
