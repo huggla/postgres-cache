@@ -9,15 +9,11 @@
 # readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
 # readonly NAME="$(var - NAME)"
 # readonly psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql --variable=ON_ERROR_STOP=1 --username postgres"
+# DATABASE FOREIGN_SERVER_SCHEMAS
 # ---------------------------------------------------------
 
 IFS_tmp=$IFS
 IFS=$(echo -en " ")
-vars="DATABASE FOREIGN_SERVER_SCHEMAS"
-for var in $vars
-do
-   eval "readonly $var=\"$(var - $var)\""
-done
 prio="40"
 dbname="$DATABASE"
 sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
