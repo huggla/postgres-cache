@@ -12,7 +12,7 @@
 
 IFS_tmp=$IFS
 IFS=$(echo -en " ")
-readonly FOREIGN_SERVER_SCHEMAS="$(var - FOREIGN_SERVER_SCHEMAS)"
+FOREIGN_SERVER_SCHEMAS="$(var - FOREIGN_SERVER_SCHEMAS)"
 prio="035"
 dbname="$DATABASE"
 sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
