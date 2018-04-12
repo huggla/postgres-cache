@@ -7,15 +7,12 @@
 # . "$BIN_DIR/start.stage2.functions"
 # readonly CONFIG_FILE="$(var - CONFIG_FILE)"
 # readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
+# USER DATABASE FOREIGN_SERVER_NAME
 # ---------------------------------------------------------
 
 IFS_tmp=$IFS
 IFS=$(echo -en " ")
-vars="DATABASE FOREIGN_SERVER_SCHEMAS USER FOREIGN_SERVER_NAME"
-for var in $vars
-do
-   eval "readonly $var=\"$(var - $var)\""
-done
+readonly FOREIGN_SERVER_SCHEMAS="$(var - FOREIGN_SERVER_SCHEMAS)"
 prio="35"
 dbname="$DATABASE"
 sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
