@@ -40,3 +40,4 @@ do
       echo "ALTER DEFAULT PRIVILEGES IN SCHEMA \"$fschema\" GRANT SELECT ON TABLES TO \"$USER\";"
    } >> "$sql_file"
 done
+IFS=$IFS_tmp
