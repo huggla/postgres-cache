@@ -13,29 +13,21 @@
 
 IFS_tmp=$IFS
 IFS=$(echo -en " ")
-vars="DATABASE FOREIGN_SERVER_SCHEMAS USER FOREIGN_SERVER_NAME"
+vars="DATABASE FOREIGN_SERVER_SCHEMAS"
 for var in $vars
 do
    eval "readonly $var=\"$(var - $var)\""
 done
-prio="35"
+prio="40"
 dbname="$DATABASE"
 sql_file="$BIN_DIR/initdb/$prio.$dbname.sql"
 >"$sql_file"
 IFS=$(echo -en ",")
 for fschema in $FOREIGN_SERVER_SCHEMAS
 do
-#   fschema="$(trim "$fschema")"
-#   foreign_server_schema_tables="$(var - $fschema)"
-   if [ -n "$foreign_server_schema_tables" ]
-   then 
-      limitstr="LIMIT TO ($foreign_server_schema_tables)"
-   else
-      limitstr=""
-   fi
-
-done
-
+   fschema="$(trim "$fschema")"
+   foreign_server_schema_tables="$(var - $fschema)"
+   ftable_schema=$fschema"_foreign"
    if [ -z "$foreign_server_schema_tables" ]
    then
       foreign_server_schema_tables="$("$psql_cmd" -q -A -t -R , --dbname="$DATABASE" -c "SELECT table_name FROM information_schema.tables WHERE table_schema='$ftable_schema'")"
@@ -46,4 +38,4 @@ done
    done
 done
 IFS=$IFS_tmp
-eval $ADDITIONAL_CONFIGURATION
+
