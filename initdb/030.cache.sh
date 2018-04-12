@@ -11,7 +11,7 @@
 
 IFS_tmp=$IFS
 IFS=$(echo -en " ")
-vars="USER USER_PASSWORD_FILE DATABASE FOREIGN_SERVER_NAME FOREIGN_SERVER_ADDRESS FOREIGN_SERVER_DATABASE FOREIGN_SERVER_PORT FOREIGN_SERVER_USER FOREIGN_SERVER_USER_PASSWORD_FILE"
+vars="USER USER_PASSWORD_FILE DATABASE TEMPLATE FOREIGN_SERVER_NAME FOREIGN_SERVER_ADDRESS FOREIGN_SERVER_DATABASE FOREIGN_SERVER_PORT FOREIGN_SERVER_USER FOREIGN_SERVER_USER_PASSWORD_FILE"
 for var in $vars
 do
    eval "$var=\"$(var - $var)\""
@@ -27,12 +27,16 @@ do
       eval "$var=\"$(var - $var)\""
    fi
 done
+if [ -n "$TEMPLATE" ]
+then
+   template_string="TEMPLATE=$TEMPLATE"
+fi
 prio="030"
 dbname="postgres"
 sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
 {
    echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';"
-   echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";"
+   echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\" $template_string;"
 } > "$sql_file"
 prio="031"
 dbname="$DATABASE"
