@@ -14,7 +14,7 @@ IFS=$(echo -en " ")
 vars="USER USER_PASSWORD_FILE DATABASE FOREIGN_SERVER_NAME FOREIGN_SERVER_ADDRESS FOREIGN_SERVER_DATABASE FOREIGN_SERVER_PORT FOREIGN_SERVER_USER FOREIGN_SERVER_USER_PASSWORD_FILE"
 for var in $vars
 do
-   eval "readonly $var=\"$(var - $var)\""
+   eval "$var=\"$(var - $var)\""
 done
 password_vars="USER_PASSWORD FOREIGN_SERVER_USER_PASSWORD"
 for var in $password_vars
@@ -26,7 +26,6 @@ do
    else
       eval "$var=\"$(var - $var)\""
    fi
-   eval "readonly $var"
 done
 prio="030"
 dbname="postgres"
