@@ -35,7 +35,7 @@ sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
    echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";"
 } > "$sql_file"
 prio="031"
-dbnamn="$DATABASE"
+dbname="$DATABASE"
 sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
 {
    echo "CREATE EXTENSION postgres_fdw;"
