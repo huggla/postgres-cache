@@ -14,7 +14,7 @@
 
 IFS_tmp=$IFS
 IFS=$(echo -en " ")
-prio="40"
+prio="040"
 dbname="$DATABASE"
 sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
 >"$sql_file"
