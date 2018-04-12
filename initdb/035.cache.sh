@@ -1,3 +1,36 @@
+#!/bin/sh
+
+# Set in parent script:
+# ---------------------------------------------------------
+# set -e +a +m +s +i +f
+# readonly BIN_DIR="$(/usr/bin/dirname "$0")"
+# . "$BIN_DIR/start.stage2.functions"
+# readonly NAME="$(var - NAME)"
+# readonly CONFIG_FILE="$(var - CONFIG_FILE)"
+# readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
+# readonly psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql --variable=ON_ERROR_STOP=1 --username postgres"
+# ---------------------------------------------------------
+
+IFS_tmp=$IFS
+IFS=$(echo -en " ")
+vars="USER DATABASE USER_PASSWORD_FILE FOREIGN_SERVER_USER FOREIGN_SERVER_USER_PASSWORD_FILE FOREIGN_SERVER_NAME FOREIGN_SERVER_ADDRESS FOREIGN_SERVER_DATABASE FOREIGN_SERVER_PORT FOREIGN_SERVER_SCHEMAS"
+for var in $vars
+do
+   eval "readonly $var=\"$(var - $var)\""
+done
+password_vars="USER_PASSWORD FOREIGN_SERVER_USER_PASSWORD"
+for var in $password_vars
+do
+   eval "password_file_value=\$$var""_FILE"
+   if [ -n "$password_file_value" ]
+   then
+      eval "read $var < \"$password_file_value\""
+   else
+      eval "$var=\"$(var - $var)\""
+   fi
+   eval "readonly $var"
+done
+
 prio="110"
 dbname="$DATABASE"
 sql_file="$sql_dir/$prio.$dbname.sql"
