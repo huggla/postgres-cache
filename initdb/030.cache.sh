@@ -5,15 +5,13 @@
 # set -e +a +m +s +i +f
 # readonly BIN_DIR="$(/usr/bin/dirname "$0")"
 # . "$BIN_DIR/start.stage2.functions"
-# readonly NAME="$(var - NAME)"
 # readonly CONFIG_FILE="$(var - CONFIG_FILE)"
 # readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
-# readonly psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql --variable=ON_ERROR_STOP=1 --username postgres"
 # ---------------------------------------------------------
 
 IFS_tmp=$IFS
 IFS=$(echo -en " ")
-vars="USER DATABASE USER_PASSWORD_FILE FOREIGN_SERVER_USER FOREIGN_SERVER_USER_PASSWORD_FILE FOREIGN_SERVER_NAME FOREIGN_SERVER_ADDRESS FOREIGN_SERVER_DATABASE FOREIGN_SERVER_PORT FOREIGN_SERVER_SCHEMAS"
+vars="USER USER_PASSWORD_FILE DATABASE FOREIGN_SERVER_NAME FOREIGN_SERVER_ADDRESS FOREIGN_SERVER_DATABASE FOREIGN_SERVER_PORT FOREIGN_SERVER_USER FOREIGN_SERVER_USER_PASSWORD_FILE"
 for var in $vars
 do
    eval "readonly $var=\"$(var - $var)\""
