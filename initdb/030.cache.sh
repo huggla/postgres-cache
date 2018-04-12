@@ -5,6 +5,8 @@
 # set -e +a +m +s +i +f
 # readonly BIN_DIR="$(/usr/bin/dirname "$0")"
 # . "$BIN_DIR/start.stage2.functions"
+# readonly CONFIG_FILE="$(var - CONFIG_FILE)"
+# readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
 # ---------------------------------------------------------
 
 IFS_tmp=$IFS
@@ -28,7 +30,7 @@ do
 done
 prio="030"
 dbname="postgres"
-sql_file="$BIN_DIR/initdb/$prio.$dbname.sql"
+sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
 {
    echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';"
    echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\";"
