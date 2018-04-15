@@ -7,8 +7,8 @@
 # . "$BIN_DIR/start.stage2.functions"
 # readonly CONFIG_FILE="$(var - CONFIG_FILE)"
 # readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
-# readonly NAME="$(var - NAME)"
-# readonly psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $NAME $BIN_DIR/psql --variable=ON_ERROR_STOP=1 --username postgres"
+# readonly LINUX_USER="$(var - LINUX_USER)"
+# readonly psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $LINUX_USER $BIN_DIR/psql --variable=ON_ERROR_STOP=1 --username postgres"
 # DATABASE FOREIGN_SERVER_SCHEMAS
 # ---------------------------------------------------------
 
