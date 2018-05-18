@@ -3,12 +3,8 @@
 # Set in parent script:
 # ---------------------------------------------------------
 # set -e +a +m +s +i +f
-# readonly BIN_DIR="$(/usr/bin/dirname "$0")"
-# . "$BIN_DIR/start.stage2.functions"
-# readonly CONFIG_FILE="$(var - CONFIG_FILE)"
-# readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
-# USER DATABASE FOREIGN_SERVER_NAME
-# ---------------------------------------------------------
+# . /start/stage2.functions
+# VAR_*
 
 IFS_tmp=$IFS
 IFS=$(echo -en " ")
