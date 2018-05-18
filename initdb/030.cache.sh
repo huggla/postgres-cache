@@ -6,7 +6,7 @@
 # VAR_*
 # ---------------------------------------------------------
 
-writePgCacheSqlFiles(){
+writePgCacheSqlFiles1(){
    local template_string=""
    if [ -n "$VAR_TEMPLATE" ]
    then
@@ -30,3 +30,5 @@ writePgCacheSqlFiles(){
       echo "CREATE USER MAPPING FOR \"postgres\" SERVER \"$VAR_FOREIGN_SERVER_NAME\" OPTIONS (user '$VAR_FOREIGN_SERVER_USER', password '$VAR_FOREIGN_SERVER_USER_PASSWORD');"
    } > "$sql_file"
 }
+
+writePgCacheSqlFiles1
