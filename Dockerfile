@@ -2,17 +2,14 @@ FROM huggla/postgres-alpine
 
 USER root
 
-COPY ./initdb "$CONFIG_DIR/initdb"
+COPY ./initdb /initdb
 
-USER sudoer
+ENV VAR_USER="reader" \
+    VAR_USER_PASSWORD="read" \
+    VAR_DATABASE="cache" \
+    VAR_FOREIGN_SERVER_NAME="foreign_server" \
+    VAR_FOREIGN_SERVER_PORT="5432" \
+    VAR_param_fsync="off" \
+    VAR_param_full_page_writes="off"
 
-# pre-set variables (can be set at runtime)
-# ------------------------------------------
-ENV REV_USER="reader" \
-    REV_USER_PASSWORD="read" \
-    REV_DATABASE="cache" \
-    REV_FOREIGN_SERVER_NAME="foreign_server" \
-    REV_FOREIGN_SERVER_PORT="5432" \
-    REV_param_fsync="off" \
-    REV_param_full_page_writes="off"
-# ------------------------------------------
+USER starter
