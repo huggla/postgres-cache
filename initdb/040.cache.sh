@@ -1,25 +1,18 @@
 #!/bin/sh
 
-# Set in parent script:
+# Set in parent scripts:
 # ---------------------------------------------------------
 # set -e +a +m +s +i +f
-# readonly BIN_DIR="$(/usr/bin/dirname "$0")"
-# . "$BIN_DIR/start.stage2.functions"
-# readonly CONFIG_FILE="$(var - CONFIG_FILE)"
-# readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
-# readonly LINUX_USER="$(var - LINUX_USER)"
+# . /start/stage2.functions
+# VAR_*
 # readonly psql_cmd="/usr/bin/env -i $BIN_DIR/sudo -u $LINUX_USER $BIN_DIR/psql --variable=ON_ERROR_STOP=1 --username postgres"
-# DATABASE FOREIGN_SERVER_SCHEMAS
-# ---------------------------------------------------------
 
-IFS_tmp=$IFS
-IFS=$(echo -en " ")
 prio="040"
-dbname="$DATABASE"
-sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
+dbname="$VAR_DATABASE"
+sql_file="/initdb/$prio.$dbname.sql"
 >"$sql_file"
 IFS=$(echo -en ",")
-for fschema in $FOREIGN_SERVER_SCHEMAS
+for fschema in $VAR_FOREIGN_SERVER_SCHEMAS
 do
    fschema="$(trim "$fschema")"
    foreign_server_schema_tables="$(var - $fschema)"
