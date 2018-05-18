@@ -1,34 +1,32 @@
 #!/bin/sh
 
-# Set in parent script:
+# Set in parent scripts:
 # ---------------------------------------------------------
 # set -e +a +m +s +i +f
-# readonly BIN_DIR="$(/usr/bin/dirname "$0")"
-# . "$BIN_DIR/start.stage2.functions"
-# readonly CONFIG_FILE="$(var - CONFIG_FILE)"
-# readonly CONFIG_DIR="$(/usr/bin/dirname "$CONFIG_FILE")"
+# VAR_*
 # ---------------------------------------------------------
 
-
-if [ -n "$TEMPLATE" ]
-then
-   template_string="TEMPLATE=$TEMPLATE"
-fi
-prio="030"
-dbname="postgres"
-sql_file="/initdb/$prio.$dbname.sql"
-{
-   echo "CREATE USER \"$USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$USER_PASSWORD';"
-   echo "CREATE DATABASE \"$DATABASE\" WITH OWNER = \"postgres\" $template_string;"
-} > "$sql_file"
-prio="031"
-dbname="$DATABASE"
-sql_file="$CONFIG_DIR/initdb/$prio.$dbname.sql"
-{
-   echo "CREATE EXTENSION postgres_fdw;"
-   echo "CREATE SERVER \"$FOREIGN_SERVER_NAME\" FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host '$FOREIGN_SERVER_ADDRESS', dbname '$FOREIGN_SERVER_DATABASE', port '$FOREIGN_SERVER_PORT');"
-   echo "ALTER SERVER \"$FOREIGN_SERVER_NAME\" OPTIONS (ADD updatable 'false');"
-   echo "CREATE USER MAPPING FOR \"$USER\" SERVER \"$FOREIGN_SERVER_NAME\" OPTIONS (user '$FOREIGN_SERVER_USER', password '$FOREIGN_SERVER_USER_PASSWORD');"
-   echo "CREATE USER MAPPING FOR \"postgres\" SERVER \"$FOREIGN_SERVER_NAME\" OPTIONS (user '$FOREIGN_SERVER_USER', password '$FOREIGN_SERVER_USER_PASSWORD');"
-} > "$sql_file"
-IFS=$IFS_tmp
+writePgCacheSqlFiles(){
+   local template_string=""
+   if [ -n "$VAR_TEMPLATE" ]
+   then
+      template_string="TEMPLATE=$VAR_TEMPLATE"
+   fi
+   local prio="030"
+   local dbname="postgres"
+   local sql_file="/initdb/$prio.$dbname.sql"
+   {
+      echo "CREATE USER \"$VAR_USER\" WITH LOGIN NOINHERIT VALID UNTIL 'infinity' PASSWORD '$VAR_USER_PASSWORD';"
+      echo "CREATE DATABASE \"$VAR_DATABASE\" WITH OWNER = \"$VAR_LINUX_USER\" $template_string;"
+   } > "$sql_file"
+   prio="031"
+   dbname="$VAR_DATABASE"
+   sql_file="/initdb/$prio.$dbname.sql"
+   {
+      echo "CREATE EXTENSION postgres_fdw;"
+      echo "CREATE SERVER \"$VAR_FOREIGN_SERVER_NAME\" FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host '$VAR_FOREIGN_SERVER_ADDRESS', dbname '$VAR_FOREIGN_SERVER_DATABASE', port '$VAR_FOREIGN_SERVER_PORT');"
+      echo "ALTER SERVER \"$VAR_FOREIGN_SERVER_NAME\" OPTIONS (ADD updatable 'false');"
+      echo "CREATE USER MAPPING FOR \"$VAR_USER\" SERVER \"$VAR_FOREIGN_SERVER_NAME\" OPTIONS (user '$VAR_FOREIGN_SERVER_USER', password '$VAR_FOREIGN_SERVER_USER_PASSWORD');"
+      echo "CREATE USER MAPPING FOR \"postgres\" SERVER \"$VAR_FOREIGN_SERVER_NAME\" OPTIONS (user '$VAR_FOREIGN_SERVER_USER', password '$VAR_FOREIGN_SERVER_USER_PASSWORD');"
+   } > "$sql_file"
+}
