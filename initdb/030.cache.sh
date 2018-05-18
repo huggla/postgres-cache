@@ -6,7 +6,7 @@
 # VAR_*
 # ---------------------------------------------------------
 
-writePgCacheSqlFiles1(){
+writeSqlPrio3031(){
    local template_string=""
    if [ -n "$VAR_TEMPLATE" ]
    then
@@ -31,4 +31,4 @@ writePgCacheSqlFiles1(){
    } > "$sql_file"
 }
 
-writePgCacheSqlFiles1
+writeSqlPrio3031
