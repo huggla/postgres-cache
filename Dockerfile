@@ -1,8 +1,10 @@
-FROM huggla/postgres-alpine
+FROM huggla/postgres-alpine as stage1
 
-USER root
+COPY ./rootfs /rootfs
 
-COPY ./initdb /initdb
+RUN find /* -maxdepth 0 ! -name rootfs -execdir cp -a {} /rootfs/
+
+FROM huggla/base
 
 ENV VAR_USER="reader" \
     VAR_USER_PASSWORD="read" \
@@ -12,4 +14,4 @@ ENV VAR_USER="reader" \
     VAR_param_fsync="off" \
     VAR_param_full_page_writes="off"
 
-USER starter
+ONBUILD USER root
